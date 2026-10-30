@@ -1,0 +1,259 @@
+.galaxy-mode-dock {
+  width: min(1180px, calc(100% - 180px));
+  max-width: none;
+}
+.scene-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: #030510;
+  animation: scene-arrival 1.2s ease-out forwards;
+}
+@keyframes scene-arrival {
+  from {
+    opacity: 0.82;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-reveal {
+    animation: none;
+    opacity: 0;
+  }
+}
+.galaxy-mode-dock nav {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4d6b9638 transparent;
+  scroll-snap-type: x proximity;
+}
+.galaxy-mode-dock nav button {
+  flex-shrink: 0;
+  scroll-snap-align: center;
+  padding: 11px 12px;
+}
+.live-lyrics {
+  max-height: min(680px, calc(100dvh - 180px));
+  overflow-y: auto;
+}
+.live-lyrics-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  color: #bad1f7;
+  padding: 9px 11px;
+  border: 1px solid #a0bff52a;
+  border-radius: 5px;
+  background: #11203c88;
+}
+.live-lyrics-toggle.active {
+  background: #28539355;
+  border-color: #9fc4ff66;
+}
+.live-lyrics-toggle svg {
+  width: 16px;
+}
+.live-lyrics.is-transcribing {
+  top: 86px;
+  transform: none;
+  width: 310px;
+}
+.live-lyrics.is-transcribing .caption-stage {
+  padding: 15px 19px;
+}
+.live-lyrics.is-transcribing .caption-note {
+  font-size: 8px;
+}
+.live-transcription-overlay {
+  position: fixed;
+  z-index: 50;
+  bottom: 145px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(880px, calc(100vw - 80px));
+  text-align: center;
+  pointer-events: none;
+  color: #edf3ff;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+.live-transcription-overlay > span {
+  display: inline-block;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #b1c7ed;
+  padding: 5px 9px;
+  border-radius: 4px;
+  background: #030712ad;
+}
+.live-transcription-overlay > p {
+  font-size: clamp(22px, 2.4vw, 36px);
+  font-weight: 500;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 8px 0 0;
+  padding: 13px 24px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #050a1600, #050a16d9 15%, #050a16d9 85%, #050a1600);
+  text-shadow: 0 2px 14px #000;
+  max-height: 30vh;
+  overflow: hidden;
+}
+.live-transcription-overlay.is-draft > p {
+  color: #d2e4ff;
+}
+.caption-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #9fbcf412;
+}
+.caption-options label {
+  color: #8199bc;
+  font-size: 9px;
+  display: grid;
+  gap: 8px;
+}
+.caption-options select {
+  min-width: 0;
+  width: 100%;
+  color: #c5d6f0;
+  background: #0b1428;
+  border: 1px solid #8ca9dd26;
+  border-radius: 5px;
+  padding: 9px 7px;
+  font-size: 10px;
+}
+.caption-options select:disabled {
+  opacity: 0.6;
+}
+.caption-options .caption-translation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  grid-column: 1 / -1;
+}
+.caption-translation input {
+  accent-color: #9dbbff;
+}
+.caption-stage {
+  padding: 18px 23px 22px;
+  text-align: center;
+}
+.caption-stage .lyric-current {
+  font-size: 22px;
+  line-height: 1.85;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 18px 0 24px;
+}
+.caption-stage .lyric-neighbor {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.caption-stage .caption-waiting {
+  font-size: 18px;
+  color: #8297ba;
+}
+.caption-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 9px;
+  line-height: 1.7;
+  color: #718bb3;
+}
+.caption-status svg {
+  flex-shrink: 0;
+}
+.caption-stop {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #8ba9dc26;
+  padding: 8px 12px;
+  border-radius: 5px;
+  margin-top: 12px;
+  font-size: 10px;
+  color: #c5d6f0;
+}
+.caption-note {
+  padding: 0 22px 20px;
+  font-size: 9px;
+  line-height: 1.8;
+  color: #6d83a6;
+  margin: 0;
+}
+@media (max-width: 700px) {
+  .live-lyrics-toggle {
+    padding: 7px 8px;
+    gap: 5px;
+    font-size: 8px;
+  }
+  .live-lyrics-toggle svg {
+    width: 14px;
+  }
+  .live-transcription-overlay {
+    bottom: 153px;
+    width: calc(100vw - 26px);
+  }
+  .live-transcription-overlay > p {
+    padding: 9px 12px;
+    font-size: 23px;
+    max-height: 27vh;
+  }
+  .live-lyrics.is-transcribing {
+    top: 204px;
+    bottom: auto;
+    left: 21px;
+    right: 21px;
+    width: auto;
+    max-height: 180px;
+  }
+  .galaxy-mode-dock {
+    width: calc(100% - 32px);
+    max-width: 580px;
+    bottom: 20px;
+  }
+  .galaxy-mode-dock nav {
+    display: flex;
+    gap: 3px;
+    padding: 4px;
+  }
+  .galaxy-mode-dock nav button {
+    padding: 11px 13px;
+    font-size: 10px;
+  }
+  .galaxy-view-tools {
+    bottom: 101px;
+  }
+  .live-lyrics {
+    top: auto;
+    bottom: 138px;
+    max-height: calc(100dvh - 340px);
+  }
+  .caption-options {
+    padding: 12px 16px;
+    gap: 9px;
+  }
+  .caption-stage {
+    padding: 12px 18px;
+  }
+  .caption-stage .lyric-current {
+    font-size: 19px;
+    margin: 10px 0 17px;
+  }
+  .caption-note {
+    padding: 0 18px 16px;
+    font-size: 8px;
+  }
+}

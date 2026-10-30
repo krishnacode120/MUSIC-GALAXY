@@ -1,0 +1,1068 @@
+.galaxy-app {
+  height: 100dvh;
+  min-height: 560px;
+  position: relative;
+  overflow: hidden;
+  background: #030510;
+  color: #dce6fb;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+.galaxy-app .scene {
+  background: #030510;
+}
+.galaxy-app .vignette {
+  background: linear-gradient(180deg, #02040e18 60%, #02040e80);
+  box-shadow: inset 0 0 130px 15px #02040e50;
+}
+.galaxy-interface {
+  transition: opacity 0.5s;
+}
+.galaxy-app.immersed .galaxy-interface {
+  opacity: 0;
+  pointer-events: none;
+}
+.galaxy-app.immersed .galaxy-interface * {
+  pointer-events: none !important;
+}
+.galaxy-header {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.galaxy-brand {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  color: #e1e9fc;
+  text-decoration: none;
+  font-size: 19px;
+  font-weight: 350;
+  letter-spacing: -0.4px;
+  animation: galaxy-reveal 2s ease both;
+}
+.galaxy-brand > span {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid #89a9f31e;
+  color: #b4c8f4;
+  background: radial-gradient(#6b8bd31a, transparent);
+}
+.galaxy-brand small {
+  display: block;
+  font-size: 8px;
+  color: #7187af;
+  letter-spacing: 1.5px;
+  font-weight: 400;
+  margin-top: 4px;
+}
+.galaxy-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.galaxy-app .icon-button {
+  color: #8098c3;
+  border-radius: 6px;
+  width: 29px;
+  height: 29px;
+}
+.galaxy-app .icon-button:hover {
+  color: #dfebff;
+  background: #94b8ff0c;
+}
+.galaxy-app .icon-button.active {
+  background: #7eafff15;
+  color: #c4d8ff;
+}
+.live-connect {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 5px;
+  border: 1px solid #88afff29;
+  background: #243c6e15;
+  color: #a4bae0;
+  font-size: 10px;
+  margin-right: 6px;
+}
+.live-connect i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #879dc2;
+}
+.live-connect.connected i {
+  background: #a5dbc9;
+  box-shadow: 0 0 9px #a5dbc947;
+}
+.compact-player {
+  position: absolute;
+  top: 87px;
+  left: 30px;
+  width: 316px;
+  padding: 14px 15px 10px;
+  border: 1px solid #9fbeff19;
+  border-radius: 9px;
+  background: linear-gradient(140deg, #14264b9c, #0a162c80);
+  box-shadow: 0 12px 40px #01040b25;
+  backdrop-filter: blur(18px);
+}
+.compact-track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.compact-art {
+  height: 30px;
+  width: 30px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid #96baff1d;
+  border-radius: 6px;
+  background: #789fff0c;
+  color: #9fb8ed;
+  font-size: 19px;
+}
+.compact-track > div {
+  min-width: 0;
+  flex: 1;
+}
+.compact-track strong {
+  display: block;
+  font-weight: 450;
+  font-size: 11px;
+  color: #bdcfee;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 212px;
+}
+.compact-track > div > button {
+  display: block;
+  padding: 0;
+  font-size: 8px;
+  color: #647fae;
+  margin-top: 6px;
+  text-align: left;
+}
+.compact-track .icon-button {
+  width: 22px;
+  height: 25px;
+}
+.compact-seek {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 6px;
+}
+.compact-seek time {
+  font-size: 8px;
+  color: #6c84af;
+  font-variant-numeric: tabular-nums;
+}
+.galaxy-app input[type='range'] {
+  height: 2px;
+  background: #91b0e925;
+  accent-color: #b2cbf8;
+}
+.galaxy-app input[type='range']::-webkit-slider-thumb {
+  height: 6px;
+  width: 6px;
+  background: #b1caf5;
+  box-shadow: none;
+}
+.galaxy-app input[type='range']::-moz-range-thumb {
+  height: 6px;
+  width: 6px;
+  background: #b1caf5;
+}
+.compact-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: -3px;
+}
+.compact-controls .icon-button {
+  width: 24px;
+  height: 25px;
+}
+.compact-spacer {
+  flex: 1;
+}
+.compact-controls > input {
+  width: 39px;
+  margin-right: 5px;
+}
+.compact-live {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+.compact-live .spectrum {
+  display: block;
+  width: 74px;
+  height: 20px;
+}
+.audio-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #536b94;
+  font-size: 8px;
+  white-space: nowrap;
+}
+.audio-status i {
+  height: 3px;
+  width: 3px;
+  border-radius: 50%;
+  background: #587194;
+}
+.audio-status.receiving {
+  color: #91adcf;
+}
+.audio-status.receiving i {
+  background: #a3c8dc;
+  box-shadow: 0 0 6px #a3c8dc50;
+}
+.compact-live .audio-status {
+  flex: 1;
+  font-size: 7px;
+}
+.compact-live .icon-button {
+  width: 20px;
+}
+.compact-start {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #87b2f610;
+}
+.compact-start button {
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #8eabd8;
+}
+.compact-start button:first-child {
+  color: #b3c8ec;
+}
+.galaxy-welcome {
+  position: absolute;
+  left: 34px;
+  bottom: 139px;
+  pointer-events: none;
+}
+.galaxy-welcome > span {
+  font-size: 6px;
+  color: #637daa;
+  letter-spacing: 2px;
+}
+.galaxy-welcome p {
+  font-size: 11px;
+  font-weight: 350;
+  color: #7e96be;
+  margin: 9px 0 12px;
+}
+.galaxy-welcome button {
+  font-size: 9px;
+  color: #9db8e6;
+  display: flex;
+  gap: 17px;
+  pointer-events: auto;
+  padding: 0;
+}
+.galaxy-mode-dock {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 50px);
+}
+.galaxy-mode-dock nav {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 6px;
+  border: 1px solid #9fbcf416;
+  background: linear-gradient(160deg, #111d36a1, #08102380);
+  backdrop-filter: blur(18px);
+  border-radius: 9px;
+}
+.galaxy-mode-dock nav button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 10px;
+  color: #647ea8;
+  white-space: nowrap;
+}
+.galaxy-mode-dock nav button:hover {
+  color: #c7dbff;
+  background: #83a7e908;
+}
+.galaxy-mode-dock nav button.selected {
+  color: #cadbfa;
+  background: #7ea6f010;
+  border-color: #98baff24;
+}
+.galaxy-dock-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  margin: 11px 7px 0;
+  font-size: 7px;
+  color: #455c83;
+}
+.galaxy-dock-caption > span > i {
+  font-style: normal;
+  margin: 0 6px;
+}
+.galaxy-dock-caption .audio-status {
+  font-size: 7px;
+}
+.galaxy-view-tools {
+  position: absolute;
+  bottom: 31px;
+  left: 29px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.galaxy-view-tools > span {
+  font-size: 8px;
+  color: #6b87b2;
+  margin-left: 8px;
+}
+.galaxy-studio-position {
+  position: absolute;
+  top: 79px;
+  bottom: 112px;
+  right: 27px;
+  width: 320px;
+  z-index: 20;
+}
+.galaxy-app .flow-studio {
+  background: #0a1425ed;
+  border-color: #a5c5ff20;
+  box-shadow: 0 20px 50px #0004;
+}
+.galaxy-app .flow-studio h2 {
+  color: #c3d6f5;
+}
+.galaxy-app .studio-section h3 {
+  color: #a2bde6;
+}
+.galaxy-app .studio-section p,
+.galaxy-app .flow-check {
+  color: #6f8bb4;
+}
+.galaxy-app .studio-tabs {
+  border-color: #87b0ed19;
+}
+.galaxy-app .studio-tabs > button {
+  color: #6a87b2;
+}
+.galaxy-app .studio-tabs > button.selected {
+  color: #c2d6f4;
+  border-color: #a5c7f4;
+}
+.galaxy-app .flow-slider > span,
+.galaxy-app .layer-label > span {
+  color: #94b2da;
+}
+.galaxy-app .flow-slider output,
+.galaxy-app .layer-label small {
+  color: #4e739f;
+}
+.galaxy-app .studio-section {
+  border-color: #87b0ed12;
+}
+.galaxy-app .flow-check input:checked {
+  background: #b0cbf0;
+  border-color: #b0cbf0;
+}
+.galaxy-app .look-list > button > span,
+.galaxy-app .saved-look > button:first-child {
+  color: #a4bfe3;
+}
+.galaxy-app .save-look {
+  border-color: #8fb8ea26;
+}
+.galaxy-app .save-look input {
+  color: #a5c1e6;
+}
+.galaxy-app .flow-dna dd {
+  color: #a5bfe4;
+}
+.galaxy-app .flow-dna dt {
+  color: #5e80ab;
+}
+.expanded-player {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 236px;
+  padding: 27px 0 0;
+  border: 1px solid #99bcff24;
+  background: #0a172ce8;
+  backdrop-filter: blur(22px);
+  border-radius: 9px;
+  z-index: 15;
+}
+.expanded-player > header {
+  position: absolute;
+  left: 16px;
+  right: 12px;
+  top: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: #597ba8;
+}
+.expanded-player .player-wrap {
+  position: static;
+}
+.expanded-player .player {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  padding-top: 0;
+}
+.expanded-player .player-caption {
+  display: none;
+}
+.expanded-player .track-info strong {
+  color: #afc8ec;
+}
+.expanded-player .track-info span {
+  color: #5b7fab;
+}
+.expanded-player .album-art {
+  border-color: #93b6ef20;
+  color: #adc8f0;
+  background: #547fbc15;
+}
+.expanded-player .play-button {
+  background: #b9cfee;
+  color: #192b48;
+}
+.expanded-player .seek time {
+  color: #587ba7;
+}
+.galaxy-app .playlist {
+  left: 30px;
+  top: 236px;
+  bottom: auto;
+  background: #0a182df5;
+  border-color: #98baf324;
+  color: #a5c3e9;
+  z-index: 25;
+}
+.galaxy-app .playlist li.current {
+  background: #7fa7e715;
+}
+.galaxy-app .playlist li small {
+  color: #5e80ad;
+}
+.galaxy-app .empty-note {
+  color: #6b8bb7;
+}
+.live-source-note {
+  position: absolute;
+  left: 30px;
+  top: 213px;
+  padding: 17px 20px;
+  width: 316px;
+  border: 1px solid #98baf326;
+  background: #0b1932e6;
+  border-radius: 7px;
+  z-index: 15;
+  font-size: 10px;
+  color: #809ac1;
+  line-height: 1.7;
+}
+.live-source-note button {
+  color: #b0c9ec;
+  font-size: 9px;
+  margin-top: 6px;
+  padding: 0;
+}
+.galaxy-toast {
+  position: absolute;
+  bottom: 123px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px 10px 16px;
+  max-width: 540px;
+  border: 1px solid #8fb9ef2b;
+  border-radius: 7px;
+  background: #0c1a30ef;
+  color: #a7c4eb;
+  font-size: 10px;
+  line-height: 1.7;
+  z-index: 45;
+  backdrop-filter: blur(20px);
+}
+.galaxy-toast > svg {
+  flex-shrink: 0;
+}
+.galaxy-return {
+  position: absolute;
+  top: 24px;
+  right: 26px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #0b182bb3;
+  border: 1px solid #91b6f526;
+  border-radius: 6px;
+  padding: 10px 13px;
+  color: #8faed9;
+  font-size: 10px;
+  opacity: 0.55;
+}
+.galaxy-return:hover {
+  opacity: 1;
+}
+.galaxy-return kbd {
+  font-size: 7px;
+  color: #54739d;
+  margin-left: 8px;
+}
+.galaxy-recording {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #211a25bd;
+  border: 1px solid #bd8f9c24;
+  border-radius: 20px;
+  color: #d1a7b4;
+  font-size: 9px;
+  padding: 7px 12px;
+  z-index: 30;
+}
+.galaxy-recording i {
+  height: 4px;
+  width: 4px;
+  background: #dfa3ae;
+  border-radius: 50%;
+}
+.galaxy-drop {
+  position: absolute;
+  inset: 14px;
+  border: 1px dashed #91b9f5aa;
+  backdrop-filter: blur(14px);
+  background: #07152ae6;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #a4c7f4;
+  border-radius: 13px;
+  pointer-events: none;
+}
+.galaxy-drop h2 {
+  font-size: 32px;
+  font-weight: 300;
+}
+.galaxy-drop p {
+  color: #6b95c7;
+}
+.lyric-layer[hidden] {
+  display: none;
+}
+.lyrics-panel {
+  position: absolute;
+  right: 31px;
+  top: 33%;
+  width: 350px;
+  max-height: 54%;
+  overflow: auto;
+  scrollbar-width: thin;
+  border: 1px solid #aac6fa16;
+  border-radius: 10px;
+  background: linear-gradient(140deg, #0f204044, #07112588);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 15px 45px #0002;
+  z-index: 12;
+}
+.lyrics-panel > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 15px;
+  border-bottom: 1px solid #8db5ed12;
+}
+.lyrics-panel > header > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #9dbce7;
+  font-size: 10px;
+}
+.lyrics-panel small {
+  color: #5e7da8;
+  font-size: 8px;
+}
+.lyrics-panel > header small {
+  margin-left: 5px;
+}
+.lyrics-empty {
+  text-align: center;
+  padding: 27px 24px;
+  color: #8eafd9;
+}
+.lyrics-empty > svg {
+  margin: auto;
+  opacity: 0.6;
+}
+.lyrics-empty h2 {
+  font-size: 18px;
+  font-weight: 300;
+  margin: 16px 0 10px;
+}
+.lyrics-empty p {
+  font-size: 10px;
+  line-height: 1.8;
+  color: #688ab6;
+}
+.lyric-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #759bdb12;
+  border: 1px solid #91b5ed33;
+  border-radius: 5px;
+  padding: 9px 14px;
+  font-size: 10px;
+  color: #a9c6ed;
+  margin: 18px auto;
+}
+.lyrics-empty > small {
+  display: block;
+  font-size: 8px;
+  line-height: 1.8;
+}
+.lyric-lines {
+  text-align: center;
+  padding: 23px 22px 18px;
+  font-family: 'Nirmala UI', 'Latha', 'Segoe UI', sans-serif;
+}
+.lyric-neighbor {
+  font-size: 11px;
+  color: #6c83aa7d;
+  line-height: 1.9;
+  min-height: 20px;
+  white-space: pre-line;
+  margin: 10px 0;
+}
+.lyric-current {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.9;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  color: #d0e0f9;
+  text-shadow: 0 0 25px #8fb6e925;
+  margin: 19px 0;
+}
+.lyrics-panel > footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 15px;
+  border-top: 1px solid #8db5ed12;
+  font-size: 8px;
+  color: #577ca9;
+}
+.lyric-filename {
+  padding: 0;
+  color: #6c95c5;
+  font-size: 8px;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lyrics-panel > footer label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.lyrics-panel input[type='number'] {
+  background: #6d98cc0b;
+  border: 1px solid #88afe52b;
+  border-radius: 3px;
+  width: 43px;
+  padding: 3px 4px;
+  color: #9dbce5;
+  font-size: 9px;
+}
+.lyric-live-sync {
+  padding: 8px 14px 13px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.lyric-live-sync button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: #9cbce7;
+  padding: 0;
+}
+.lyric-live-sync small {
+  width: 100%;
+  font-size: 8px;
+  line-height: 1.7;
+}
+.lyric-error {
+  padding: 0 18px 15px;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #dbb7b5;
+}
+.galaxy-app .loading {
+  background: #030510;
+  color: #748fba;
+}
+.galaxy-app .loading-orbit {
+  border-color: #9bbdff15;
+  border-top-color: #a8c8ff;
+}
+.galaxy-app .webgl-error {
+  left: 31%;
+  width: 38%;
+  color: #9cb9e6;
+}
+.galaxy-app .webgl-error p {
+  color: #647fa9;
+}
+@keyframes galaxy-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 1100px) {
+  .galaxy-view-tools {
+    bottom: 125px;
+    left: 28px;
+  }
+  .galaxy-mode-dock nav button {
+    padding: 10px 11px;
+    font-size: 9px;
+    gap: 6px;
+  }
+  .galaxy-mode-dock nav {
+    gap: 2px;
+  }
+  .lyrics-panel {
+    width: 300px;
+    right: 25px;
+  }
+  .galaxy-welcome {
+    bottom: 174px;
+  }
+  .galaxy-studio-position {
+    right: 23px;
+  }
+  .galaxy-header {
+    left: 26px;
+    right: 26px;
+  }
+  .compact-player {
+    left: 26px;
+    width: 296px;
+  }
+}
+@media (max-width: 700px) {
+  .galaxy-header {
+    top: 21px;
+    left: 21px;
+    right: 18px;
+    align-items: flex-start;
+  }
+  .galaxy-brand {
+    font-size: 17px;
+    gap: 8px;
+  }
+  .galaxy-brand > span {
+    width: 31px;
+    height: 31px;
+  }
+  .galaxy-brand small {
+    font-size: 7px;
+  }
+  .galaxy-actions {
+    gap: 3px;
+  }
+  .galaxy-actions .icon-button {
+    width: 27px;
+  }
+  .live-connect {
+    font-size: 8px;
+    padding: 7px 9px;
+    margin-right: 2px;
+    gap: 5px;
+  }
+  .galaxy-actions > .icon-button:nth-last-child(2) {
+    display: none;
+  }
+  .compact-player {
+    top: 81px;
+    left: 21px;
+    width: 274px;
+    padding: 12px 13px 8px;
+  }
+  .compact-track strong {
+    font-size: 10px;
+    max-width: 177px;
+  }
+  .compact-track > div > button {
+    font-size: 7px;
+  }
+  .compact-art {
+    height: 27px;
+    width: 27px;
+  }
+  .compact-start button {
+    font-size: 8px;
+  }
+  .compact-live {
+    gap: 6px;
+  }
+  .compact-live .audio-status {
+    font-size: 6px;
+  }
+  .compact-player .compact-controls {
+    gap: 2px;
+  }
+  .compact-controls > input {
+    width: 32px;
+  }
+  .galaxy-mode-dock {
+    bottom: 19px;
+    width: calc(100% - 38px);
+    max-width: 450px;
+  }
+  .galaxy-mode-dock nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    padding: 4px;
+  }
+  .galaxy-mode-dock nav button {
+    justify-content: center;
+    gap: 7px;
+    font-size: 9px;
+    padding: 9px 5px;
+  }
+  .galaxy-mode-dock nav svg {
+    width: 14px;
+    height: 14px;
+  }
+  .galaxy-dock-caption {
+    font-size: 6px;
+    gap: 5px;
+    margin: 10px 5px 0;
+  }
+  .galaxy-dock-caption .audio-status {
+    font-size: 6px;
+    gap: 4px;
+  }
+  .galaxy-view-tools {
+    bottom: 134px;
+    left: 18px;
+    gap: 2px;
+  }
+  .galaxy-view-tools .icon-button {
+    width: 24px;
+    height: 24px;
+  }
+  .galaxy-welcome {
+    left: 24px;
+    bottom: 183px;
+  }
+  .galaxy-welcome > span {
+    font-size: 5px;
+    letter-spacing: 1.5px;
+  }
+  .galaxy-welcome p {
+    font-size: 9px;
+    margin: 8px 0 10px;
+  }
+  .galaxy-welcome button {
+    font-size: 8px;
+  }
+  .galaxy-studio-position {
+    top: 75px;
+    bottom: 134px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
+  .lyrics-panel {
+    top: auto;
+    bottom: 175px;
+    left: 21px;
+    right: 21px;
+    width: auto;
+    max-height: 40%;
+  }
+  .lyrics-empty {
+    padding: 20px;
+  }
+  .lyrics-empty h2 {
+    font-size: 17px;
+  }
+  .lyrics-empty p {
+    font-size: 9px;
+  }
+  .lyric-lines {
+    padding: 12px 18px;
+  }
+  .lyric-current {
+    font-size: 20px;
+    line-height: 1.85;
+    margin: 15px 0;
+  }
+  .lyric-neighbor {
+    font-size: 10px;
+    margin: 8px 0;
+  }
+  .expanded-player {
+    top: 229px;
+    left: 12px;
+    right: 12px;
+    padding-top: 27px;
+  }
+  .expanded-player .player {
+    padding: 0 14px 12px;
+    gap: 8px;
+  }
+  .expanded-player .track-info strong {
+    font-size: 9px;
+  }
+  .expanded-player .album-art {
+    height: 29px;
+    width: 29px;
+  }
+  .expanded-player .track-info span {
+    font-size: 7px;
+  }
+  .galaxy-app .playlist {
+    left: 12px;
+    right: 12px;
+    top: 229px;
+    width: auto;
+    max-height: 48vh;
+  }
+  .live-source-note {
+    top: 184px;
+    left: 21px;
+    width: 274px;
+    padding: 13px 15px;
+    font-size: 9px;
+  }
+  .galaxy-toast {
+    bottom: 145px;
+    width: calc(100% - 28px);
+    font-size: 9px;
+    max-width: 450px;
+  }
+  .galaxy-recording {
+    top: 72px;
+    left: auto;
+    right: 16px;
+    transform: none;
+    font-size: 7px;
+    gap: 5px;
+    padding: 6px 9px;
+  }
+  .galaxy-return {
+    top: 20px;
+    right: 19px;
+    font-size: 9px;
+  }
+  .galaxy-drop h2 {
+    font-size: 25px;
+  }
+  .galaxy-app .webgl-error {
+    left: 25px;
+    top: 42%;
+    width: calc(100% - 50px);
+    font-size: 10px;
+  }
+  .galaxy-app .webgl-error h2 {
+    font-size: 18px;
+  }
+}
+@media (max-width: 390px) {
+  .galaxy-brand {
+    font-size: 16px;
+  }
+  .galaxy-brand > span {
+    display: none;
+  }
+  .galaxy-actions {
+    gap: 0;
+  }
+  .live-connect {
+    padding: 7px;
+    font-size: 7px;
+  }
+  .galaxy-actions .icon-button {
+    width: 25px;
+  }
+  .galaxy-actions > .icon-button:nth-child(3) {
+    display: none;
+  }
+  .compact-player {
+    width: 262px;
+  }
+  .compact-track strong {
+    max-width: 165px;
+  }
+  .galaxy-dock-caption > span:first-child {
+    font-size: 5px;
+  }
+}
