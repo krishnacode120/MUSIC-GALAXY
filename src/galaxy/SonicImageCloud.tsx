@@ -28,22 +28,24 @@ void main(){
   float angle=atan(p.y,p.x);
   float phase=angle*2.4-radius*.52+aSeed*6.28318+uTime*.24;
   float currentBand=aBand<.5?uBass:aBand<1.5?uMid:uTreble;
-  float curl=sin(phase)+.36*sin(phase*2.-uTime*.11);
+  float curl=sin(phase)+.48*sin(phase*2.-uTime*.14)+.22*cos(phase*.47+uTime*.09+aSeed*8.);
   vec2 radial=normalize(p.xy);
   vec2 tangent=vec2(-radial.y,radial.x);
-  p.xy*=1.+uBass*(.1+aBand*.03)+uHit*.022;
-  p.xy+=radial*(curl*(.035+uBass*.12));
-  p.xy+=tangent*(curl*(.075+uMid*.28));
-  p.xy+=vec2(sin(p.y*.42+uTime*.18+aSeed*4.),cos(p.x*.38-uTime*.14+aSeed*5.))*(.055+uMid*.2);
-  p.z+=sin(phase*1.7+uTime*.17)*(.1+uTreble*.26+uEnergy*.1);
+  p.xy*=1.+uBass*(.12+aBand*.035)+uHit*.028;
+  p.xy+=radial*(curl*(.12+uBass*.2));
+  p.xy+=tangent*(curl*(.2+uMid*.42));
+  p.xy+=vec2(sin(p.y*.42+uTime*.3+aSeed*4.),cos(p.x*.38-uTime*.24+aSeed*5.))*(.14+uMid*.3+uEnergy*.08);
+  p.z+=sin(phase*1.7+uTime*.3+aSeed*3.)*(.24+uTreble*.4+uEnergy*.16);
   vec4 mv=modelViewMatrix*vec4(p,1.);
   gl_Position=projectionMatrix*mv;
-  gl_PointSize=clamp(aSize*uRatio*55./max(2.,-mv.z)*(1.+currentBand*.42),.8,8.);
-  vec3 tint=aBand<.5?vec3(1.,.4,.16):aBand<1.5?uMidColor:uHighColor;
-  float blend=.14+currentBand*.48+uEnergy*.08;
-  vColor=mix(aColor,tint,blend)*(uBrightness*(.72+aLight*.86+currentBand*.32+uEnergy*.18));
+  gl_PointSize=clamp(aSize*uRatio*72./max(2.,-mv.z)*(1.+currentBand*.48),1.2,11.);
+  vec3 warm=vec3(1.,.34,.17), violet=vec3(.68,.3,1.), cyan=vec3(.16,.78,1.);
+  vec3 tint=aBand<.5?mix(warm,uMidColor,.3):aBand<1.5?mix(uMidColor,violet,.28):mix(uHighColor,cyan,.22);
+  float blend=.28+currentBand*.54+uEnergy*.1;
+  float cloudGlow=.9+aLight*.9+currentBand*.45+uEnergy*.22;
+  vColor=mix(aColor,tint,blend)*(uBrightness*cloudGlow*1.35);
   float layer=aBand<.5?uLayers.x:aBand<1.5?uLayers.y:uLayers.z;
-  vAlpha=smoothstep(.012,.28,aLight)*layer*(.72+aBand*.12+currentBand*.36+uEnergy*.18);
+  vAlpha=(.22+smoothstep(.006,.22,aLight)*.78)*layer*(.95+aBand*.14+currentBand*.48+uEnergy*.2);
   vSoftness=aSeed;
 }`;
 const particleFragment = /* glsl */ `
@@ -53,10 +55,10 @@ void main(){
   vec2 p=gl_PointCoord-.5;
   float d=dot(p,p);
   if(d>.25)discard;
-  float halo=exp(-d*22.);
-  float core=exp(-d*105.);
+  float halo=exp(-d*13.);
+  float core=exp(-d*78.);
   float shimmer=.9+.1*sin(vSoftness*35.);
-  gl_FragColor=vec4(vColor*(halo*.78+core*.5),halo*vAlpha*shimmer);
+  gl_FragColor=vec4(vColor*(halo*.9+core*.65),halo*vAlpha*shimmer);
 }`;
 
 function sampleArtwork(image: HTMLImageElement, count: number, seed: number) {
@@ -100,7 +102,7 @@ function sampleArtwork(image: HTMLImageElement, count: number, seed: number) {
     seeds[i] = random();
     bands[i] = red > green * 1.12 && red > blue * 1.1 ? 0 : luminance > 0.72 ? 2 : 1;
     light[i] = luminance;
-    sizes[i] = 0.7 + random() * 0.8;
+    sizes[i] = 0.9 + random() * 1.0;
   }
   return { positions, colors, seeds, bands, light, sizes };
 }
@@ -132,7 +134,7 @@ function ImageParticles({
       uEnergy: { value: 0 },
       uHit: { value: 0 },
       uRatio: { value: 1 },
-      uBrightness: { value: 0.65 },
+      uBrightness: { value: 1 },
       uLayers: { value: new THREE.Vector3(1, 1, 1) },
       uMidColor: { value: new THREE.Color() },
       uHighColor: { value: new THREE.Color() },
@@ -142,7 +144,8 @@ function ImageParticles({
   useFrame(() => {
     const experience = useExperience.getState(),
       u = uniforms;
-    u.uTime.value = signal.time * 3.2;
+    // Keep a gentle flow even when audio is paused; audio bands add motion on top.
+    u.uTime.value = signal.time * 6;
     u.uBass.value = signal.bass;
     u.uMid.value = signal.mid;
     u.uTreble.value = signal.treble;

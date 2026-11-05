@@ -50,11 +50,12 @@ export class ReactiveSignal {
     );
     this.rhythm.advance(f, dt, !e.running || s.reducedMotion || s.relax);
     this.hit = THREE.MathUtils.damp(this.hit, Math.min(0.28, this.rhythm.hit * 0.24), 2.5, dt);
-    const motion = s.reducedMotion ? 0 : Math.max(0.1, e.movement) * (s.relax ? 0.35 : 1);
+    // Reduced-motion preference softens the field without freezing its ambient drift.
+    const motion = Math.max(0.1, e.movement) * (s.reducedMotion ? 0.22 : s.relax ? 0.35 : 1);
     // Velocity follows a slow envelope; individual beats deform the field without accelerating the camera tunnel.
     this.flowVelocity = THREE.MathUtils.damp(
       this.flowVelocity,
-      motion * (0.35 + this.energy * 0.55),
+      motion * (0.7 + this.energy * 0.45),
       2,
       dt,
     );
