@@ -77,42 +77,6 @@ void main(){
  float d=dot(p,p);if(d>.25)discard;float glow=exp(-d*20.);
  gl_FragColor=vec4(vColor+vec3(exp(-d*80.)*.22),glow*vAlpha);
 }`;
-export const cloudVertex = /* glsl */ `varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
-export const cloudFragment = /* glsl */ `
-varying vec2 vUv;uniform float uTime,uMid,uEnergy,uBass,uHit,uBrightness,uStyle;uniform vec3 uTint,uTint2;
-float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+1.),f.x),f.y);}
-float fbm(vec2 p){float n=0.,a=.5;for(int i=0;i<5;i++){n+=noise(p)*a;p=p*2.03+13.7;a*=.5;}return n;}
-void main(){
- vec2 p=(vUv-.5)*2.;float radius=length(p*vec2(.88,1.18));
- vec2 drift=vec2(uTime*.018,-uTime*.012);
- float n=fbm(p*3.+vec2(fbm(p*2.+drift),fbm(p*2.-drift))*(.8+uMid*.22));
- float dust=fbm(p*8.+n*2.);
- if(uStyle<.5){
-   float angle=atan(p.y,p.x);float spiral=sin(angle*4.-radius*12.+n*3.);
-   float arm=smoothstep(.72,.98,spiral)*exp(-radius*.78);float core=exp(-radius*9.);
-   float alpha=(pow(dust,2.2)*.14+arm*.13+core*.24)*(1.-smoothstep(.88,1.35,radius));
-   vec3 color=mix(uTint,uTint2,smoothstep(.1,.95,radius));
-   color=mix(color,vec3(1.,.42,.16),core*.92);
-   gl_FragColor=vec4(color*(.48+uEnergy*.12+uBass*.08)*uBrightness,alpha);return;
- }
- if(uStyle>1.5){
-   float angle=atan(p.y,p.x);float diskRadius=length(p*vec2(.92,1.18));
-   float warped=angle+diskRadius*2.4+n*.28+uTime*.012;
-   float ring=exp(-pow((diskRadius-.44)*31.,2.));
-   float stream=pow(max(0.,sin(warped*3.-diskRadius*8.)),10.)*exp(-abs(diskRadius-.46)*5.);
-   float halo=exp(-pow((diskRadius-.49)*8.,2.))*(.12+uBass*.12+uHit*.08);
-   float voidDisk=1.-smoothstep(.135,.155,diskRadius);
-   vec3 color=mix(uTint2,vec3(1.,.5,.22),clamp(ring+stream*.6,0.,1.));
-   color=mix(color,vec3(.95,.78,1.),ring*.55);
-   float alpha=clamp(ring*.78+stream*.17+halo,0.,.92)*(1.-voidDisk)+voidDisk;
-   gl_FragColor=vec4(color*(.52+uBass*.12)*uBrightness,alpha);return;
- }
- float alpha=pow(dust,2.)*(1.-smoothstep(.12,1.05,length(p)));
- vec3 color=mix(uTint,uTint2,n);color=mix(color,vec3(.04,.45,.38),smoothstep(.6,1.5,p.x+n)*.55);
- gl_FragColor=vec4(color*(.38+uEnergy*.14)*uBrightness,alpha*.3);
-}`;
-
 export const starsVertex = /* glsl */ `
 attribute float aSize;uniform float uTime,uTreble,uRatio,uBrightness;varying float vAlpha;
 void main(){vec4 mv=modelViewMatrix*vec4(position,1.);gl_Position=projectionMatrix*mv;

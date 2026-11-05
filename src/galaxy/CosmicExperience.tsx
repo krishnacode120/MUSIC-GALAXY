@@ -7,17 +7,14 @@ import { seeded } from '../utils/random';
 import { ReactiveSignal } from './ReactiveSignal';
 import { GeometricModes, ElectroSphere } from './GeometricModes';
 import { WaveOcean } from './WaveOcean';
-import { SceneArtwork } from './SceneArtwork';
+import { SonicImageCloud } from './SonicImageCloud';
 import {
   particleVertex,
   particleFragment,
-  cloudVertex,
-  cloudFragment,
   starsVertex,
   starsFragment,
 } from '../shaders/reactiveParticles';
 
-const counts = { Low: 24000, Medium: 52000, High: 96000, Ultra: 160000 };
 const matrixCounts = { Low: 2400, Medium: 3800, High: 5800, Ultra: 8600 };
 function glyphAtlas() {
   const canvas = document.createElement('canvas');
@@ -41,11 +38,9 @@ export function CosmicExperience() {
     seed = useUniverse((s) => s.dna?.seed ?? 52841),
     density = useExperience((s) => s.density),
     form = useExperience((s) => s.form);
-  const count = [3, 5, 7].includes(form)
-      ? 0
-      : Math.floor((form === 9 ? matrixCounts[quality] : counts[quality]) * density),
+  const count =
+      form === 9 ? Math.floor(matrixCounts[quality] * density) : 0,
     material = useRef<THREE.ShaderMaterial>(null),
-    cloud = useRef<THREE.ShaderMaterial>(null),
     signal = useMemo(() => new ReactiveSignal(), []),
     texture = useMemo(glyphAtlas, []),
     gl = useThree((s) => s.gl);
@@ -72,20 +67,6 @@ export function CosmicExperience() {
       uLayers: { value: new THREE.Vector3(1, 1, 1) },
     }),
     [signal, texture],
-  );
-  const clouds = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uMid: { value: 0 },
-      uEnergy: { value: 0 },
-      uBass: { value: 0 },
-      uHit: { value: 0 },
-      uStyle: { value: 1 },
-      uTint: { value: new THREE.Color() },
-      uBrightness: { value: 0.65 },
-      uTint2: { value: new THREE.Color() },
-    }),
-    [],
   );
   const data = useMemo(() => {
     const rand = seeded(seed),
@@ -131,30 +112,13 @@ export function CosmicExperience() {
         u.uBodyColor.value.lerp(u.uDetailColor.value, Math.min(0.45, signal.mid * 0.3));
       u.uLayers.value.set(e.low, e.body, e.detail);
     }
-    if (cloud.current) {
-      const c = cloud.current.uniforms;
-      c.uTime.value = signal.time;
-      c.uMid.value = signal.mid;
-      c.uEnergy.value = signal.energy;
-      c.uBass.value = signal.bass;
-      c.uHit.value = signal.hit;
-      c.uBrightness.value = e.brightness;
-      c.uStyle.value = e.form === 0 ? 0 : e.form === 6 ? 2 : 1;
-      const blending = e.form === 6 ? THREE.NormalBlending : THREE.AdditiveBlending;
-      if (cloud.current.blending !== blending) {
-        cloud.current.blending = blending;
-        cloud.current.needsUpdate = true;
-      }
-      c.uTint.value.set(palette.colors[1]);
-      c.uTint2.value.set(palette.colors[0]);
-    }
     gl.domElement.dataset.experience = String(e.form);
   });
   return (
     <>
       <DistantStars signal={signal} />
-      <SceneArtwork form={form} signal={signal} />
-      {![3, 5, 7].includes(form) && (
+      <SonicImageCloud form={form} signal={signal} />
+      {form === 9 && (
         <points frustumCulled={false}>
           <bufferGeometry key={`${count}-${seed}`}>
             <bufferAttribute attach="attributes-position" args={[data.p, 3]} />
@@ -173,20 +137,6 @@ export function CosmicExperience() {
             blending={THREE.AdditiveBlending}
           />
         </points>
-      )}
-      {form === 2 && (
-        <mesh position={[0, 0, -6]}>
-          <planeGeometry args={form === 6 ? [30, 30] : [38, 29]} />
-          <shaderMaterial
-            ref={cloud}
-            uniforms={clouds}
-            vertexShader={cloudVertex}
-            fragmentShader={cloudFragment}
-            transparent
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-          />
-        </mesh>
       )}
       {[3, 5, 7].includes(form) && <GeometricModes key={form} form={form} signal={signal} />}
       {form === 4 && <WaveOcean signal={signal} />}
