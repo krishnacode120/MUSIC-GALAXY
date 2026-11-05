@@ -3,7 +3,17 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 
 const root = path.resolve('dist');
-const files = ['/index.html', '/favicon.svg', '/audio/lyric-tap.js'];
+const files = [
+  '/index.html',
+  '/favicon.svg',
+  '/audio/lyric-tap.js',
+  '/galaxy-reference/planetary-nebula.webp',
+  '/galaxy-reference/black-hole-flow.webp',
+  '/galaxy-reference/blue-nebula.webp',
+  '/galaxy-reference/spiral-vortex.webp',
+  '/galaxy-reference/event-horizon.webp',
+  '/galaxy-reference/dust-galaxy.webp',
+];
 const optional = ['/lyrics-runtime/ort-wasm-simd-threaded.asyncify.mjs'];
 for (const name of await readdir(path.join(root, 'assets'))) {
   const list = name.startsWith('lyrics.worker-') || name.endsWith('.wasm') ? optional : files;

@@ -7,7 +7,7 @@ import { seeded } from '../utils/random';
 import { ReactiveSignal } from './ReactiveSignal';
 import { GeometricModes, ElectroSphere } from './GeometricModes';
 import { WaveOcean } from './WaveOcean';
-import { CelestialBodies } from './CelestialBodies';
+import { SceneArtwork } from './SceneArtwork';
 import {
   particleVertex,
   particleFragment,
@@ -153,7 +153,7 @@ export function CosmicExperience() {
   return (
     <>
       <DistantStars signal={signal} />
-      {form === 0 && <CelestialBodies signal={signal} />}
+      <SceneArtwork form={form} signal={signal} />
       {![3, 5, 7].includes(form) && (
         <points frustumCulled={false}>
           <bufferGeometry key={`${count}-${seed}`}>
@@ -174,7 +174,7 @@ export function CosmicExperience() {
           />
         </points>
       )}
-      {[0, 2, 6].includes(form) && (
+      {form === 2 && (
         <mesh position={[0, 0, -6]}>
           <planeGeometry args={form === 6 ? [30, 30] : [38, 29]} />
           <shaderMaterial
@@ -186,12 +186,6 @@ export function CosmicExperience() {
             depthWrite={false}
             blending={THREE.AdditiveBlending}
           />
-        </mesh>
-      )}
-      {form === 6 && (
-        <mesh position={[0, 0, 0.2]}>
-          <circleGeometry args={[2, 128]} />
-          <meshBasicMaterial color="#010105" toneMapped={false} />
         </mesh>
       )}
       {[3, 5, 7].includes(form) && <GeometricModes key={form} form={form} signal={signal} />}
