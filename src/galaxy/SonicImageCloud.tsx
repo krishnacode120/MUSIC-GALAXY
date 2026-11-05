@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from 'react';
+import { Suspense, useMemo, useRef } from 'react';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useExperience, inks } from '../stores/experience';
@@ -32,10 +32,10 @@ void main(){
   vec2 radial=normalize(p.xy);
   vec2 tangent=vec2(-radial.y,radial.x);
   p.xy*=1.+uBass*(.12+aBand*.035)+uHit*.028;
-  p.xy+=radial*(curl*(.12+uBass*.2));
-  p.xy+=tangent*(curl*(.2+uMid*.42));
-  p.xy+=vec2(sin(p.y*.42+uTime*.3+aSeed*4.),cos(p.x*.38-uTime*.24+aSeed*5.))*(.14+uMid*.3+uEnergy*.08);
-  p.z+=sin(phase*1.7+uTime*.3+aSeed*3.)*(.24+uTreble*.4+uEnergy*.16);
+  p.xy+=radial*(curl*(.3+uBass*.25));
+  p.xy+=tangent*(curl*(.48+uMid*.45));
+  p.xy+=vec2(sin(p.y*.42+uTime*.48+aSeed*4.),cos(p.x*.38-uTime*.37+aSeed*5.))*(.3+uMid*.32+uEnergy*.1);
+  p.z+=sin(phase*1.7+uTime*.42+aSeed*3.)*(.38+uTreble*.4+uEnergy*.16);
   vec4 mv=modelViewMatrix*vec4(p,1.);
   gl_Position=projectionMatrix*mv;
   gl_PointSize=clamp(aSize*uRatio*72./max(2.,-mv.z)*(1.+currentBand*.48),1.2,11.);
@@ -141,11 +141,13 @@ function ImageParticles({
     }),
     [],
   );
-  useFrame(() => {
+  const elapsed = useRef(0);
+  useFrame((_, delta) => {
     const experience = useExperience.getState(),
       u = uniforms;
-    // Keep a gentle flow even when audio is paused; audio bands add motion on top.
-    u.uTime.value = signal.time * 6;
+    // Advance from render time, independent of audio and motion preferences, so the dust always flows.
+    elapsed.current += Math.min(delta, 0.05) * 1.2;
+    u.uTime.value = elapsed.current;
     u.uBass.value = signal.bass;
     u.uMid.value = signal.mid;
     u.uTreble.value = signal.treble;
