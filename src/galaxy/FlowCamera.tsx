@@ -33,6 +33,8 @@ export function FlowCamera() {
       enableDamping
       dampingFactor={0.06}
       enablePan={false}
+      minPolarAngle={0.08}
+      maxPolarAngle={Math.PI - 0.08}
       minDistance={3}
       maxDistance={85}
       onStart={() => {
@@ -45,15 +47,15 @@ export function FlowCamera() {
 function useMemoDestination(form: number) {
   const ref = useRef(new THREE.Vector3());
   const views = [
-    [0, 0, 15],
-    [0, 2, 21],
-    [0, 0, 20],
-    [0, 3, 23],
-    [0, 5, 18],
-    [0, 10, 16],
-    [0, 0, 20],
+    [0, 0, 13],
     [0, 2, 17],
-    [0, 0, 22],
+    [0, 0, 17],
+    [0, 3, 18],
+    [0, 5, 15],
+    [0, 10, 16],
+    [0, 0, 17],
+    [0, 2, 17],
+    [0, 0, 18],
     [0, 0, 21],
   ];
   ref.current.set(...((views[form] ?? views[0]) as [number, number, number]));

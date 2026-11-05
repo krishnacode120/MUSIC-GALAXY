@@ -33,6 +33,7 @@ interface Experience {
   body: number;
   detail: number;
   colorDrift: boolean;
+  running: boolean;
   frozen: boolean;
   change: (patch: Partial<Omit<Experience, 'change'>>) => void;
 }
@@ -46,17 +47,18 @@ export const useExperience = create<Experience>()(
       spread: 1.15,
       movement: 0.45,
       impact: 1.05,
-      brightness: 0.65,
+      brightness: 0.95,
       low: 1,
       body: 1,
       detail: 1,
       colorDrift: true,
+      running: false,
       frozen: false,
       change: (patch) => set(patch),
     }),
     {
       name: 'music-galaxy-experience-v5',
-      version: 2,
+      version: 3,
       migrate: (persisted) => {
         const saved = persisted as Partial<Experience>;
         return {
@@ -71,16 +73,17 @@ export const useExperience = create<Experience>()(
           spread: Math.max(1.15, saved.spread ?? 1.15),
           movement: Math.min(0.45, saved.movement ?? 0.45),
           impact: Math.min(1.05, saved.impact ?? 1.05),
-          brightness: 0.65,
+          brightness: 0.95,
         };
       },
-      partialize: ({ frozen: _frozen, change: _change, ...state }) => state,
+      partialize: ({ frozen: _frozen, running: _running, change: _change, ...state }) => state,
       merge: (persisted, current) => {
         const saved = persisted as Partial<Experience>;
         return {
           ...current,
           ...saved,
           frozen: false,
+          running: false,
           form:
             Number.isInteger(saved?.form) && saved.form! >= 0 && saved.form! < forms.length
               ? saved.form!
@@ -91,7 +94,7 @@ export const useExperience = create<Experience>()(
               : 0,
           movement: Math.max(0.1, Math.min(1.5, saved?.movement ?? 0.45)),
           impact: Math.max(0.5, Math.min(2.5, saved?.impact ?? 1.05)),
-          brightness: Math.max(0.25, Math.min(1.2, saved?.brightness ?? 0.65)),
+          brightness: Math.max(0.25, Math.min(1.2, saved?.brightness ?? 0.95)),
         };
       },
     },

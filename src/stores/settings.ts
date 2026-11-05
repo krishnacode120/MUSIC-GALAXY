@@ -20,7 +20,7 @@ const reduced =
   typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 export const defaults: Settings = {
   quality: 'High',
-  bloom: 0.3,
+  bloom: 0.55,
   sensitivity: 1,
   bass: 1,
   mid: 1,
@@ -74,19 +74,19 @@ export const useUniverse = create<UniverseState>()(
     }),
     {
       name: 'music-galaxy-settings-v2',
-      version: 3,
+      version: 4,
       migrate: (persisted) => {
         const saved = persisted as Partial<UniverseState>;
         return {
           settings: {
             ...defaults,
             ...saved.settings,
-            bloom: Math.min(0.35, saved.settings?.bloom ?? 0.3),
+            bloom: Math.max(0.45, saved.settings?.bloom ?? 0.5),
           },
           songPreferences: Object.fromEntries(
             Object.entries(saved.songPreferences ?? {}).map(([hash, settings]) => [
               hash,
-              { ...settings, bloom: Math.min(0.35, settings.bloom) },
+              { ...settings, bloom: Math.max(0.45, settings.bloom) },
             ]),
           ),
         };

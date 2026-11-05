@@ -82,27 +82,38 @@
   background: #7eafff15;
   color: #c4d8ff;
 }
-.live-connect {
+.visualizer-toggle {
   display: flex;
-  gap: 7px;
+  gap: 8px;
   align-items: center;
-  padding: 9px 12px;
-  border-radius: 5px;
-  border: 1px solid #88afff29;
-  background: #243c6e15;
-  color: #a4bae0;
-  font-size: 10px;
-  margin-right: 6px;
+  justify-content: center;
+  min-width: 118px;
+  padding: 10px 15px;
+  border-radius: 999px;
+  border: 1px solid #8edfff8a;
+  background: linear-gradient(120deg, #167aa6cc, #6338aacc 58%, #a24f8acc);
+  box-shadow: 0 0 25px #42baff43, inset 0 1px 0 #ffffff34;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 5px #061326b0;
 }
-.live-connect i {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #879dc2;
+.visualizer-toggle:hover {
+  filter: brightness(1.18);
+  box-shadow: 0 0 34px #65cfff65, inset 0 1px 0 #ffffff4a;
 }
-.live-connect.connected i {
-  background: #a5dbc9;
-  box-shadow: 0 0 9px #a5dbc947;
+.visualizer-toggle.running {
+  min-width: 92px;
+  border-color: #ffc39065;
+  background: linear-gradient(120deg, #382646d9, #773b56d9);
+  box-shadow: 0 0 20px #ff8d7450, inset 0 1px 0 #ffffff20;
+  color: #ffe6e4;
+}
+.galaxy-app:fullscreen {
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh;
 }
 .compact-player {
   position: absolute;
@@ -838,14 +849,14 @@
   .galaxy-actions .icon-button {
     width: 27px;
   }
-  .live-connect {
-    font-size: 8px;
-    padding: 7px 9px;
-    margin-right: 2px;
-    gap: 5px;
+  .visualizer-toggle {
+    min-width: 38px;
+    height: 34px;
+    padding: 7px 11px;
+    font-size: 0;
   }
-  .galaxy-actions > .icon-button:nth-last-child(2) {
-    display: none;
+  .visualizer-toggle.running {
+    min-width: 38px;
   }
   .compact-player {
     top: 81px;
@@ -1045,10 +1056,6 @@
   }
   .galaxy-actions {
     gap: 0;
-  }
-  .live-connect {
-    padding: 7px;
-    font-size: 7px;
   }
   .galaxy-actions .icon-button {
     width: 25px;

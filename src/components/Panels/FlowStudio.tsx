@@ -395,7 +395,7 @@ export function FlowStudio({ onClose }: { onClose: () => void }) {
               spread: 1.15,
               movement: 0.45,
               impact: 1.05,
-              brightness: 0.65,
+              brightness: 0.95,
               low: 1,
               body: 1,
               detail: 1,

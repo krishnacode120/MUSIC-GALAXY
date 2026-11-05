@@ -25,7 +25,7 @@ export class ReactiveSignal {
       e = useExperience.getState(),
       dt = Math.min(delta, 0.1);
     const sensitivity = s.sensitivity * e.impact * (s.reducedMotion ? 0.22 : 1);
-    const gate = THREE.MathUtils.smoothstep(f.rms, 0.0004, 0.003);
+    const gate = e.running ? THREE.MathUtils.smoothstep(f.rms, 0.0004, 0.003) : 0;
     // Track useful band peaks independently: a loud bass line must not bury the mids/highs.
     this.bandPeaks[0] = Math.max(f.bass, this.bandPeaks[0] * Math.exp(-dt * 0.22), 0.22);
     this.bandPeaks[1] = Math.max(f.mid, this.bandPeaks[1] * Math.exp(-dt * 0.22), 0.1);
@@ -48,7 +48,7 @@ export class ReactiveSignal {
       1.8,
       dt,
     );
-    this.rhythm.advance(f, dt, s.reducedMotion || s.relax);
+    this.rhythm.advance(f, dt, !e.running || s.reducedMotion || s.relax);
     this.hit = THREE.MathUtils.damp(this.hit, Math.min(0.28, this.rhythm.hit * 0.24), 2.5, dt);
     const motion = s.reducedMotion ? 0 : Math.max(0.1, e.movement) * (s.relax ? 0.35 : 1);
     // Velocity follows a slow envelope; individual beats deform the field without accelerating the camera tunnel.

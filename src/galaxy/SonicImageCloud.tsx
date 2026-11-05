@@ -38,12 +38,12 @@ void main(){
   p.z+=sin(phase*1.7+uTime*.17)*(.1+uTreble*.26+uEnergy*.1);
   vec4 mv=modelViewMatrix*vec4(p,1.);
   gl_Position=projectionMatrix*mv;
-  gl_PointSize=clamp(aSize*uRatio*48./max(2.,-mv.z)*(1.+currentBand*.34),.7,5.5);
+  gl_PointSize=clamp(aSize*uRatio*55./max(2.,-mv.z)*(1.+currentBand*.42),.8,8.);
   vec3 tint=aBand<.5?vec3(1.,.4,.16):aBand<1.5?uMidColor:uHighColor;
   float blend=.14+currentBand*.48+uEnergy*.08;
-  vColor=mix(aColor,tint,blend)*(uBrightness*(.48+aLight*.7+currentBand*.22+uEnergy*.14));
+  vColor=mix(aColor,tint,blend)*(uBrightness*(.72+aLight*.86+currentBand*.32+uEnergy*.18));
   float layer=aBand<.5?uLayers.x:aBand<1.5?uLayers.y:uLayers.z;
-  vAlpha=smoothstep(.025,.34,aLight)*layer*(.56+aBand*.08+currentBand*.28+uEnergy*.12);
+  vAlpha=smoothstep(.012,.28,aLight)*layer*(.72+aBand*.12+currentBand*.36+uEnergy*.18);
   vSoftness=aSeed;
 }`;
 const particleFragment = /* glsl */ `
@@ -93,14 +93,14 @@ function sampleArtwork(image: HTMLImageElement, count: number, seed: number) {
       index = i * 3;
     positions[index] = ((x + random()) / width - 0.5) * 27;
     positions[index + 1] = (0.5 - (y + random()) / height) * 15.2;
-    positions[index + 2] = (random() - 0.5) * (0.8 + luminance * 0.9);
+    positions[index + 2] = (random() - 0.5) * (5.5 + luminance * 3.5);
     colors[index] = red;
     colors[index + 1] = green;
     colors[index + 2] = blue;
     seeds[i] = random();
     bands[i] = red > green * 1.12 && red > blue * 1.1 ? 0 : luminance > 0.72 ? 2 : 1;
     light[i] = luminance;
-    sizes[i] = 0.55 + random() * 0.7;
+    sizes[i] = 0.7 + random() * 0.8;
   }
   return { positions, colors, seeds, bands, light, sizes };
 }

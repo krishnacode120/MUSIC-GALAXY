@@ -8,9 +8,9 @@ import {
   Scan,
   Repeat2,
   Binary,
-  Captions,
+  Play,
+  Square,
   Camera,
-  Maximize2,
   Settings2,
   RotateCcw,
   Clapperboard,
@@ -29,7 +29,6 @@ import { CompactPlayer, AudioStatus } from '../components/Player/CompactPlayer';
 import { Player, Playlist } from '../components/Player/Player';
 import { SourceDialog } from '../components/Panels/SourceDialog';
 import { FlowStudio } from '../components/Panels/FlowStudio';
-import { LyricsPanel } from '../components/Panels/LyricsPanel';
 import { IconButton } from '../components/Controls/IconButton';
 import { screenshot } from '../utils/capture';
 const icons = [Orbit, Waves, Cloud, BarChart3, Waves, Box, Scan, Repeat2, Orbit, Binary];
@@ -37,7 +36,6 @@ const icons = [Orbit, Waves, Cloud, BarChart3, Waves, Box, Scan, Repeat2, Orbit,
 export default function GalaxyApp() {
   const [source, setSource] = useState(false),
     [studio, setStudio] = useState(false),
-    [lyrics, setLyrics] = useState(false),
     [expanded, setExpanded] = useState(false),
     [queue, setQueue] = useState(false),
     [hidden, setHidden] = useState(false),
@@ -72,6 +70,37 @@ export default function GalaxyApp() {
       else await document.documentElement.requestFullscreen();
     } catch {
       setToast('Fullscreen is unavailable in this browser window.');
+    }
+  }
+  async function toggleVisualizer() {
+    if (e.running) {
+      e.change({ running: false });
+      setHidden(false);
+      useUniverse.setState({ cinematic: false });
+      if (connected) live.disconnect();
+      else if (usePlayer.getState().playing) await usePlayer.getState().toggle();
+      if (document.fullscreenElement) {
+        try {
+          await document.exitFullscreen();
+        } catch {
+          setToast('Use Escape to leave fullscreen.');
+        }
+      }
+      return;
+    }
+    e.change({ running: true });
+    try {
+      if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+    } catch {
+      setToast('Fullscreen is unavailable here. The visualizer is still running.');
+    }
+    const player = usePlayer.getState();
+    if (!connected) {
+      if (player.tracks.length > 0) {
+        if (!player.playing) await player.toggle();
+      } else {
+        setSource(true);
+      }
     }
   }
   function cinematic() {
@@ -120,9 +149,6 @@ export default function GalaxyApp() {
           break;
         case 'KeyF':
           void toggleFull();
-          break;
-        case 'KeyL':
-          setLyrics((x) => !x);
           break;
         case 'KeyR':
           useUniverse.setState((state) => ({
@@ -191,29 +217,17 @@ export default function GalaxyApp() {
           </a>
           <div className="galaxy-actions">
             <button
-              className={`live-connect ${connected ? 'connected' : ''}`}
-              onClick={() => setSource(true)}
+              className={`visualizer-toggle ${e.running ? 'running' : ''}`}
+              aria-label={e.running ? 'Stop visualizer' : 'Start visualizer'}
+              aria-pressed={e.running}
+              onClick={() => void toggleVisualizer()}
             >
-              <i />
-              {connected ? 'Audio connected' : 'Connect audio'}
-            </button>
-            <button
-              className={`live-lyrics-toggle ${lyrics ? 'active' : ''}`}
-              aria-label="Toggle live lyrics"
-              aria-pressed={lyrics}
-              onClick={() => setLyrics(!lyrics)}
-            >
-              <Captions size={19} />
-              <span>Live lyrics</span>
+              {e.running ? <Square size={12} fill="currentColor" /> : <Play size={14} fill="currentColor" />}
+              <span>{e.running ? 'Stop' : 'Start visualizer'}</span>
             </button>
             <IconButton label="Capture screenshot" onClick={() => void capture()}>
               <Camera size={17} />
             </IconButton>
-            {!fullscreen && (
-              <IconButton label="Enter fullscreen" onClick={() => void toggleFull()}>
-                <Maximize2 size={17} />
-              </IconButton>
-            )}
             <IconButton label="Visual settings" active={studio} onClick={() => setStudio(!studio)}>
               <Settings2 size={17} />
             </IconButton>
@@ -267,11 +281,6 @@ export default function GalaxyApp() {
           </IconButton>
           {u.settings.showFps && <span>{u.fps} FPS</span>}
         </div>
-        {lyrics && (
-          <div className="lyric-layer">
-            <LyricsPanel onClose={() => setLyrics(false)} />
-          </div>
-        )}
         {expanded && !connected && (
           <section className="expanded-player">
             <header>
