@@ -8,7 +8,6 @@ type FlowSnapshot = Pick<
   ReturnType<typeof useExperience.getState>,
   | 'form'
   | 'ink'
-  | 'evolve'
   | 'density'
   | 'spread'
   | 'movement'
@@ -184,14 +183,7 @@ export function FlowStudio({ onClose }: { onClose: () => void }) {
               {slider('Flow speed', 'movement', 0.1, 1.5)}
               {slider('Particle density', 'density', 0.5, 2.5)}
               {slider('Canvas fill', 'spread', 0.8, 1.8)}
-              <label className="flow-check">
-                <input
-                  type="checkbox"
-                  checked={e.evolve}
-                  onChange={(event) => e.change({ evolve: event.target.checked })}
-                />
-                <span>Evolve between forms with the music</span>
-              </label>
+              <p className="studio-note">Your selected visual stays in place while the particles follow the music.</p>
               <label className="flow-check">
                 <input
                   type="checkbox"

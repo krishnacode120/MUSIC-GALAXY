@@ -7,51 +7,54 @@ varying vec3 vColor;varying float vAlpha,vStreak,vAngle,vMatrix,vGlyph;
 const float PI=3.14159265359;
 float spectrum(float x){return uSpectrum[int(clamp(x,0.,63.))];}
 void main(){
- float angle=aLane*PI*2., r=pow(aPhase,.6)*12.;
+ float angle=aLane*PI*2., r=pow(aPhase,.68)*12.;
  float band=aBand<.5?uBass:aBand<1.5?uMid:uTreble;
  float layer=aBand<.5?uLayers.x:aBand<1.5?uLayers.y:uLayers.z;
  float bin=12.+aPhase*51.;float freq=spectrum(bin);
  vec3 p=position;vStreak=0.;vMatrix=0.;float depthFade=1.;
  if(uMode<.5){
-   float z=mod(aPhase*90.+uTravel*2.,90.)-72.;
-   float a=angle+z*.014+sin(z*.08+uTime*.18)*(.12+uMid*.25);
-   float radius=(.8+abs(position.x)*5.2+aBand*1.5)*(1.+uBass*.26+uHit*.08);
-   p=vec3(cos(a)*radius,sin(a)*radius,z);vStreak=clamp(.12+uEnergy*.25,0.,.5);
-   depthFade=smoothstep(-72.,-55.,z)*(1.-smoothstep(5.,15.,z));
+   float arm=floor(aLane*4.),withinArm=fract(aLane*4.);
+   float radius=.2+r*(1.+uBass*.12+uHit*.025);
+   float spread=(withinArm-.5)*(.14+radius*.045)+position.x*.09;
+   float a=arm*PI*.5+radius*.43+spread+uTime*.012;
+   float thickness=position.y*.10+(sin(radius*1.4-uTime*.04+arm)*.08+uMid*.08);
+   p=vec3(cos(a)*(radius+thickness),sin(a)*(radius+thickness)*.68,position.z*.045);
+   vStreak=.06+uEnergy*.08;
  }else if(uMode<1.5){
    float x=(aPhase-.5)*33.,lane=floor(aLane*46.);
    float wave=uWaveform[int(aPhase*63.)];float spacing=(lane-22.5)*.21;
-   float y=sin(x*.38+uTime*1.1+lane*.13)*(.18+uMid*.65)+wave*4.5+spacing;
-   p=vec3(x,y+sin(aPhase*PI)*(freq*2.8+uBass*.8),-lane*.15+3.);
+   float y=sin(x*.38+uTime*.42+lane*.13)*(.18+uMid*.42)+wave*2.1+spacing;
+   p=vec3(x,y+sin(aPhase*PI)*(freq*1.8+uBass*.45),-lane*.15+3.);
  }else if(uMode<2.5){
-   float curl=angle+r*.22+uTime*.12+sin(r*.6-uTime*.35)*(.25+uMid*.65);
-   r*=1.+uBass*.26+uHit*.06;float ribbon=sin(curl*3.+r*.3+uTime*.2);
-   p=vec3(cos(curl)*r,sin(curl)*r*.62,position.z*.55+ribbon*(1.4+uMid*2.));
-   p.xy+=vec2(sin(p.y*.35+uTime*.5),cos(p.x*.28-uTime*.4))*(.45+freq*1.6);
+   float curl=angle+r*.28+uTime*.035+sin(r*.6-uTime*.025)*(.18+uMid*.28);
+   r*=1.+uBass*.16+uHit*.025;float ribbon=sin(curl*3.+r*.3+uTime*.045);
+   p=vec3(cos(curl)*r,sin(curl)*r*.62,position.z*.35+ribbon*(.75+uMid*.85));
+   p.xy+=vec2(sin(p.y*.2+uTime*.08),cos(p.x*.18-uTime*.06))*(.22+freq*.65);
  }else if(uMode<3.5){p=vec3(0.);}
  else if(uMode<4.5){
    float x=(aPhase-.5)*48.,z=(aLane-.5)*60.-8.;
-   float y=sin(x*.22+uTime)*cos(z*.18+uTime*.55)*(.28+uBass*2.8)+sin(z*.55-uTime*1.3)*(.12+uMid)+freq*2.;
+   float y=sin(x*.22+uTime*.45)*cos(z*.18+uTime*.24)*(.28+uBass*1.8)+sin(z*.55-uTime*.38)*(.12+uMid*.6)+freq*1.25;
    p=vec3(x,y,z);
  }else if(uMode<5.5){p=vec3(0.);}
  else if(uMode<6.5){
    float arm=floor(aLane*3.),jitter=fract(aLane*3.)-.5;
-   float a=arm*PI*2./3.+r*.49-uTime*.28+jitter*.45;
-   float breath=1.+uBass*.3+sin(a*3.+uTime)*uMid*.12;
-   p=vec3(cos(a)*r*breath,sin(a)*r*.64*breath,position.z*.65+sin(a*2.+r*.8-uTime)*freq*2.);
+   float a=arm*PI*2./3.+r*.42-uTime*.045+jitter*.3;
+   float breath=1.+uBass*.16+sin(a*3.+uTime*.12)*uMid*.06;
+   p=vec3(cos(a)*r*breath,sin(a)*r*.64*breath,position.z*.35+sin(a*2.+r*.8-uTime*.12)*freq*.85);
  }else if(uMode<7.5){p=vec3(0.);}
  else if(uMode<8.5){
    float y=aPhase*2.-1.,latitudeRadius=sqrt(max(0.,1.-y*y));float a=angle+uTime*.16;
-   float radius=7.2+freq*1.8+uBass*.85+sin(angle*12.+uTime*2.)*uTreble*.35;
+   float radius=7.2+freq*1.2+uBass*.55+sin(angle*12.+uTime*.35)*uTreble*.12;
    p=vec3(cos(a)*latitudeRadius,y,sin(a)*latitudeRadius)*radius;
  }else{
-   float column=floor(aPhase*56.),fall=mod(aLane*30.-uTravel*(.8+fract(column*.618)*1.5)+30.,30.);
+   float column=floor(aPhase*56.),fall=mod(aLane*30.-uTravel*(.18+fract(column*.618)*.35)+30.,30.);
    p=vec3((column-27.5)*.53,fall-15.,floor(fract(aPhase*56.)*5.)*1.6-4.);
-   vMatrix=1.;vGlyph=mod(floor(aLane*997.)+floor(uTime*(1.+uTreble*5.))+column*7.,64.);
+   vMatrix=1.;vGlyph=mod(floor(aLane*997.)+floor(uTime*.8+uTreble*.8)+column*7.,64.);
  }
  p*=uSpread;vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;
  vec3 color=mix(uLowColor,uBodyColor,clamp(aPhase*.7+uMid*.25,0.,1.));
  color=mix(color,uDetailColor,clamp(freq*.55+uTreble*.2,0.,.7));
+ if(uMode<.5){float core=1.-smoothstep(.25,3.8,r);color=mix(color,vec3(1.,.48,.2),core*.94);}
  if(uMode>5.5&&uMode<6.5) color=mix(vec3(.12,.08,.22),mix(uBodyColor,uDetailColor,aPhase),pow(aPhase,.6));
  if(uMode>8.5)color=mix(vec3(.025,.5,.22),vec3(.65,1.,.78),pow(fract(aLane*13.),9.)+uTreble*.3);
  vColor=color*(.5+band*.55+freq*.5+uHit*.15)*uBrightness;vAlpha=layer*(.36+band*.14+freq*.1)*depthFade;
@@ -76,18 +79,43 @@ void main(){
 }`;
 export const cloudVertex = /* glsl */ `varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
 export const cloudFragment = /* glsl */ `
-varying vec2 vUv;uniform float uTime,uMid,uEnergy,uBrightness;uniform vec3 uTint,uTint2;
+varying vec2 vUv;uniform float uTime,uMid,uEnergy,uBass,uHit,uBrightness,uStyle;uniform vec3 uTint,uTint2;
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+1.),f.x),f.y);}
 float fbm(vec2 p){float n=0.,a=.5;for(int i=0;i<5;i++){n+=noise(p)*a;p=p*2.03+13.7;a*=.5;}return n;}
-void main(){vec2 p=(vUv-.5)*2.,q=p*3.;float n=fbm(q+vec2(fbm(q+uTime*.07),fbm(q-uTime*.055))*(1.+uMid*.7));
-float dust=fbm(q*3.+n*3.);float alpha=pow(dust,1.6)*(1.-smoothstep(.1,1.,length(p)));
-vec3 color=mix(uTint,uTint2,n);color=mix(color,vec3(.04,.45,.38),smoothstep(.6,1.5,p.x+n)*.65);
-gl_FragColor=vec4(color*(.4+uEnergy*.2)*uBrightness,alpha*.4);}`;
+void main(){
+ vec2 p=(vUv-.5)*2.;float radius=length(p*vec2(.88,1.18));
+ vec2 drift=vec2(uTime*.018,-uTime*.012);
+ float n=fbm(p*3.+vec2(fbm(p*2.+drift),fbm(p*2.-drift))*(.8+uMid*.22));
+ float dust=fbm(p*8.+n*2.);
+ if(uStyle<.5){
+   float angle=atan(p.y,p.x);float spiral=sin(angle*4.-radius*12.+n*3.);
+   float arm=smoothstep(.72,.98,spiral)*exp(-radius*.78);float core=exp(-radius*9.);
+   float alpha=(pow(dust,2.2)*.14+arm*.13+core*.24)*(1.-smoothstep(.88,1.35,radius));
+   vec3 color=mix(uTint,uTint2,smoothstep(.1,.95,radius));
+   color=mix(color,vec3(1.,.42,.16),core*.92);
+   gl_FragColor=vec4(color*(.48+uEnergy*.12+uBass*.08)*uBrightness,alpha);return;
+ }
+ if(uStyle>1.5){
+   float angle=atan(p.y,p.x);float diskRadius=length(p*vec2(.92,1.18));
+   float warped=angle+diskRadius*2.4+n*.28+uTime*.012;
+   float ring=exp(-pow((diskRadius-.44)*31.,2.));
+   float stream=pow(max(0.,sin(warped*3.-diskRadius*8.)),10.)*exp(-abs(diskRadius-.46)*5.);
+   float halo=exp(-pow((diskRadius-.49)*8.,2.))*(.12+uBass*.12+uHit*.08);
+   float voidDisk=1.-smoothstep(.135,.155,diskRadius);
+   vec3 color=mix(uTint2,vec3(1.,.5,.22),clamp(ring+stream*.6,0.,1.));
+   color=mix(color,vec3(.95,.78,1.),ring*.55);
+   float alpha=clamp(ring*.78+stream*.17+halo,0.,.92)*(1.-voidDisk)+voidDisk;
+   gl_FragColor=vec4(color*(.52+uBass*.12)*uBrightness,alpha);return;
+ }
+ float alpha=pow(dust,2.)*(1.-smoothstep(.12,1.05,length(p)));
+ vec3 color=mix(uTint,uTint2,n);color=mix(color,vec3(.04,.45,.38),smoothstep(.6,1.5,p.x+n)*.55);
+ gl_FragColor=vec4(color*(.38+uEnergy*.14)*uBrightness,alpha*.3);
+}`;
 
 export const starsVertex = /* glsl */ `
 attribute float aSize;uniform float uTime,uTreble,uRatio,uBrightness;varying float vAlpha;
 void main(){vec4 mv=modelViewMatrix*vec4(position,1.);gl_Position=projectionMatrix*mv;
-gl_PointSize=clamp(aSize*uRatio*120./max(1.,-mv.z)*(1.+uTreble*.9),.6,5.);
-vAlpha=(.25+sin(position.x*3.+uTime*.2)*.06+uTreble*.15)*uBrightness;}`;
+gl_PointSize=clamp(aSize*uRatio*120./max(1.,-mv.z)*(1.+uTreble*.28),.6,4.5);
+vAlpha=(.20+sin(position.x*3.+uTime*.08)*.025+uTreble*.07)*uBrightness;}`;
 export const starsFragment = /* glsl */ `varying float vAlpha;void main(){float r=length(gl_PointCoord-.5)*2.;if(r>1.)discard;gl_FragColor=vec4(.69,.81,1.,exp(-r*r*5.)*vAlpha);}`;

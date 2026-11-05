@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useUniverse } from '../stores/universe';
-import { useExperience, inks, forms } from '../stores/experience';
+import { useExperience, inks } from '../stores/experience';
 import { seeded } from '../utils/random';
 import { ReactiveSignal } from './ReactiveSignal';
 import { GeometricModes, ElectroSphere } from './GeometricModes';
 import { WaveOcean } from './WaveOcean';
+import { CelestialBodies } from './CelestialBodies';
 import {
   particleVertex,
   particleFragment,
@@ -47,9 +48,7 @@ export function CosmicExperience() {
     cloud = useRef<THREE.ShaderMaterial>(null),
     signal = useMemo(() => new ReactiveSignal(), []),
     texture = useMemo(glyphAtlas, []),
-    gl = useThree((s) => s.gl),
-    journey = useRef(0),
-    previous = useRef(form);
+    gl = useThree((s) => s.gl);
   useEffect(() => () => texture.dispose(), [texture]);
   const uniforms = useMemo(
     () => ({
@@ -79,6 +78,9 @@ export function CosmicExperience() {
       uTime: { value: 0 },
       uMid: { value: 0 },
       uEnergy: { value: 0 },
+      uBass: { value: 0 },
+      uHit: { value: 0 },
+      uStyle: { value: 1 },
       uTint: { value: new THREE.Color() },
       uBrightness: { value: 0.65 },
       uTint2: { value: new THREE.Color() },
@@ -104,20 +106,8 @@ export function CosmicExperience() {
     return { p, phase, lane, band, size };
   }, [count, seed]);
   useFrame((_, delta) => {
-    const e = useExperience.getState(),
-      s = useUniverse.getState().settings;
+    const e = useExperience.getState();
     signal.update(delta);
-    if (previous.current !== e.form) {
-      previous.current = e.form;
-      journey.current = 0;
-    }
-    if (e.evolve && signal.energy > 0.04 && !s.reducedMotion) {
-      journey.current += Math.min(delta, 0.1);
-      if (journey.current > 42 && (signal.hit > 0.3 || journey.current > 65)) {
-        e.change({ form: (e.form + 1) % forms.length });
-        journey.current = 0;
-      }
-    }
     const u = material.current?.uniforms,
       palette = inks[e.ink] ?? inks[0];
     if (u) {
@@ -146,7 +136,15 @@ export function CosmicExperience() {
       c.uTime.value = signal.time;
       c.uMid.value = signal.mid;
       c.uEnergy.value = signal.energy;
+      c.uBass.value = signal.bass;
+      c.uHit.value = signal.hit;
       c.uBrightness.value = e.brightness;
+      c.uStyle.value = e.form === 0 ? 0 : e.form === 6 ? 2 : 1;
+      const blending = e.form === 6 ? THREE.NormalBlending : THREE.AdditiveBlending;
+      if (cloud.current.blending !== blending) {
+        cloud.current.blending = blending;
+        cloud.current.needsUpdate = true;
+      }
       c.uTint.value.set(palette.colors[1]);
       c.uTint2.value.set(palette.colors[0]);
     }
@@ -155,6 +153,7 @@ export function CosmicExperience() {
   return (
     <>
       <DistantStars signal={signal} />
+      {form === 0 && <CelestialBodies signal={signal} />}
       {![3, 5, 7].includes(form) && (
         <points frustumCulled={false}>
           <bufferGeometry key={`${count}-${seed}`}>
@@ -175,9 +174,9 @@ export function CosmicExperience() {
           />
         </points>
       )}
-      {form === 2 && (
+      {[0, 2, 6].includes(form) && (
         <mesh position={[0, 0, -6]}>
-          <planeGeometry args={[38, 29]} />
+          <planeGeometry args={form === 6 ? [30, 30] : [38, 29]} />
           <shaderMaterial
             ref={cloud}
             uniforms={clouds}
@@ -187,6 +186,12 @@ export function CosmicExperience() {
             depthWrite={false}
             blending={THREE.AdditiveBlending}
           />
+        </mesh>
+      )}
+      {form === 6 && (
+        <mesh position={[0, 0, 0.2]}>
+          <circleGeometry args={[2, 128]} />
+          <meshBasicMaterial color="#010105" toneMapped={false} />
         </mesh>
       )}
       {[3, 5, 7].includes(form) && <GeometricModes key={form} form={form} signal={signal} />}

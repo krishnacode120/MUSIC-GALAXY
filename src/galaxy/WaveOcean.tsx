@@ -5,7 +5,7 @@ import type { ReactiveSignal } from './ReactiveSignal';
 import { useExperience, inks } from '../stores/experience';
 const vertex = /* glsl */ `
 uniform float uTime;uniform float uBass;uniform float uMid;uniform float uSpectrum[64];varying vec2 vUv;varying float vHeight;varying float vDistance;
-void main(){vUv=uv;vec3 p=position;float x=p.x,z=-p.y-8.;float bin=floor(12.+uv.x*51.);float spectral=uSpectrum[int(bin)];float height=sin(x*.22+uTime)*cos(z*.18+uTime*.55)*(.28+uBass*2.8)+sin(z*.55-uTime*1.3)*(.12+uMid)+spectral*2.;p.z=height;vHeight=height;vec4 mv=modelViewMatrix*vec4(p,1.);vDistance=-mv.z;gl_Position=projectionMatrix*mv;}
+void main(){vUv=uv;vec3 p=position;float x=p.x,z=-p.y-8.;float bin=floor(12.+uv.x*51.);float spectral=uSpectrum[int(bin)];float height=sin(x*.22+uTime*.45)*cos(z*.18+uTime*.24)*(.28+uBass*1.8)+sin(z*.55-uTime*.38)*(.12+uMid*.6)+spectral*1.25;p.z=height;vHeight=height;vec4 mv=modelViewMatrix*vec4(p,1.);vDistance=-mv.z;gl_Position=projectionMatrix*mv;}
 `;
 const fragment = /* glsl */ `
 varying vec2 vUv;varying float vHeight;varying float vDistance;uniform vec3 uLowColor,uHighColor;uniform float uBrightness;

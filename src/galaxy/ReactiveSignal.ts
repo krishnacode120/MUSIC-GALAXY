@@ -39,17 +39,17 @@ export class ReactiveSignal {
     const treble = response(
       f.treble * Math.min(3, 0.26 / this.bandPeaks[2]) * sensitivity * s.treble * gate,
     );
-    this.bass = THREE.MathUtils.damp(this.bass, bass, bass > this.bass ? 8 : 2.5, dt);
-    this.mid = THREE.MathUtils.damp(this.mid, mid, mid > this.mid ? 6 : 2, dt);
-    this.treble = THREE.MathUtils.damp(this.treble, treble, treble > this.treble ? 10 : 3, dt);
+    this.bass = THREE.MathUtils.damp(this.bass, bass, bass > this.bass ? 5.5 : 1.8, dt);
+    this.mid = THREE.MathUtils.damp(this.mid, mid, mid > this.mid ? 4.5 : 1.6, dt);
+    this.treble = THREE.MathUtils.damp(this.treble, treble, treble > this.treble ? 6.5 : 2.4, dt);
     this.energy = THREE.MathUtils.damp(
       this.energy,
       response(f.energy * sensitivity * gate),
-      2.5,
+      1.8,
       dt,
     );
     this.rhythm.advance(f, dt, s.reducedMotion || s.relax);
-    this.hit = THREE.MathUtils.damp(this.hit, Math.min(0.5, this.rhythm.hit * 0.45), 5, dt);
+    this.hit = THREE.MathUtils.damp(this.hit, Math.min(0.28, this.rhythm.hit * 0.24), 2.5, dt);
     const motion = s.reducedMotion ? 0 : Math.max(0.1, e.movement) * (s.relax ? 0.35 : 1);
     // Velocity follows a slow envelope; individual beats deform the field without accelerating the camera tunnel.
     this.flowVelocity = THREE.MathUtils.damp(

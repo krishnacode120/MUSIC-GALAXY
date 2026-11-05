@@ -64,10 +64,8 @@ export function GeometricModes({ form, signal }: { form: number; signal: Reactiv
           Math.sin(x * 0.4 + y * 0.4 - t) * signal.bass * 1.7,
         );
         o.scale.set(0.76 * spread, 0.76 * spread, 0.1 + local * 0.4);
-        o.rotation.x =
-          (Math.sin(t * 1.7 + x * 0.38 + y * 0.52) * (0.15 + local * 1.8) + signal.hit * 0.5) *
-          strength;
-        o.rotation.y = Math.cos(t + x * 0.25) * signal.mid * 0.6 * strength;
+        o.rotation.x = Math.sin(t * 0.32 + x * 0.38 + y * 0.52) * (0.08 + local * 0.72) * strength;
+        o.rotation.y = Math.cos(t * 0.24 + x * 0.25) * signal.mid * 0.24 * strength;
       }
       o.updateMatrix();
       mesh.current.setMatrixAt(i, o.matrix);
@@ -89,7 +87,7 @@ export function GeometricModes({ form, signal }: { form: number; signal: Reactiv
 const electroVertex = /* glsl */ `
 uniform float uTime,uBass,uTreble,uSpectrum[64];varying float vPower;varying vec3 vNormal;
 void main(){float bin=floor(uv.x*63.);float power=uSpectrum[int(bin)];vPower=power;
-vec3 p=position*(1.+uBass*.12+power*.16)+normal*sin(position.y*6.+uTime*3.)*uTreble*.14;
+vec3 p=position*(1.+uBass*.08+power*.1)+normal*sin(position.y*6.+uTime*.5)*uTreble*.06;
 vNormal=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`;
 const electroFragment = /* glsl */ `
 uniform vec3 uColor;uniform float uEnergy,uBrightness;varying float vPower;varying vec3 vNormal;
